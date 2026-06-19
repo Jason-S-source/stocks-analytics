@@ -1,0 +1,9 @@
+1:"$Sreact.fragment"
+2:I[5891,["/stocks-analytics/_next/static/chunks/0bzlbdy7-fdu_.js","/stocks-analytics/_next/static/chunks/18hk55yvkbniu.js"],"ClientPageRoot"]
+3:I[16553,["/stocks-analytics/_next/static/chunks/0bzlbdy7-fdu_.js","/stocks-analytics/_next/static/chunks/18hk55yvkbniu.js","/stocks-analytics/_next/static/chunks/1bvyhhate1y_p.js"],"default"]
+6:I[62470,["/stocks-analytics/_next/static/chunks/0bzlbdy7-fdu_.js","/stocks-analytics/_next/static/chunks/18hk55yvkbniu.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{"symbol":"JPM"},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/stocks-analytics/_next/static/chunks/1bvyhhate1y_p.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"zCt5YvZNHWILzVChO2FX3"}
+4:{}
+5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null

@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[64764,["/stocks-analytics/_next/static/chunks/0bzlbdy7-fdu_.js","/stocks-analytics/_next/static/chunks/18hk55yvkbniu.js"],"default"]
+3:I[21590,["/stocks-analytics/_next/static/chunks/0bzlbdy7-fdu_.js","/stocks-analytics/_next/static/chunks/18hk55yvkbniu.js"],"default"]
+4:[]
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"zCt5YvZNHWILzVChO2FX3"}
