@@ -1,12 +1,13 @@
 // 股票分析平台 — 常量定义
 
 /** 市场类型 */
-export type Market = 'us' | 'hk';
+export type Market = 'us' | 'hk' | 'cn';
 
 /** 市场配置 */
 export const MARKETS: { key: Market; label: string; flag: string; currency: string; exchange: string }[] = [
   { key: 'us', label: '美股', flag: '🇺🇸', currency: 'USD', exchange: 'NYSE/NASDAQ' },
   { key: 'hk', label: '港股', flag: '🇭🇰', currency: 'HKD', exchange: 'HKEX' },
+  { key: 'cn', label: 'A股', flag: '🇨🇳', currency: 'CNY', exchange: '上交所/深交所' },
 ];
 
 /** 热门美股列表 */
@@ -67,9 +68,40 @@ export const HK_STOCKS = [
   { symbol: '2628.HK', name: '中国人寿' },
 ];
 
+/** 热门A股列表（上交所 .SS / 深交所 .SZ） */
+export const CN_STOCKS = [
+  { symbol: '600519.SS', name: '贵州茅台' },
+  { symbol: '000858.SZ', name: '五粮液' },
+  { symbol: '300750.SZ', name: '宁德时代' },
+  { symbol: '000001.SZ', name: '平安银行' },
+  { symbol: '601318.SS', name: '中国平安' },
+  { symbol: '600036.SS', name: '招商银行' },
+  { symbol: '000333.SZ', name: '美的集团' },
+  { symbol: '002594.SZ', name: '比亚迪' },
+  { symbol: '600900.SS', name: '长江电力' },
+  { symbol: '600276.SS', name: '恒瑞医药' },
+  { symbol: '601166.SS', name: '兴业银行' },
+  { symbol: '600030.SS', name: '中信证券' },
+  { symbol: '000651.SZ', name: '格力电器' },
+  { symbol: '601899.SS', name: '紫金矿业' },
+  { symbol: '300059.SZ', name: '东方财富' },
+  { symbol: '002415.SZ', name: '海康威视' },
+  { symbol: '601012.SS', name: '隆基绿能' },
+  { symbol: '600809.SS', name: '山西汾酒' },
+  { symbol: '000568.SZ', name: '泸州老窖' },
+  { symbol: '002304.SZ', name: '洋河股份' },
+  { symbol: '603259.SS', name: '药明康德' },
+  { symbol: '600585.SS', name: '海螺水泥' },
+  { symbol: '601888.SS', name: '中国中免' },
+  { symbol: '688981.SS', name: '中芯国际' },
+  { symbol: '300274.SZ', name: '阳光电源' },
+];
+
 /** 根据市场获取股票列表 */
 export function getStocksByMarket(market: Market) {
-  return market === 'us' ? US_STOCKS : HK_STOCKS;
+  if (market === 'us') return US_STOCKS;
+  if (market === 'hk') return HK_STOCKS;
+  return CN_STOCKS;
 }
 
 /** K线图时间周期选项 */

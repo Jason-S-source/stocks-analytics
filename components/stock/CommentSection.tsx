@@ -8,26 +8,38 @@ interface CommentSectionProps {
   symbol: string;
 }
 
+const STORAGE_KEY_PREFIX = 'stock_comments_';
+
+/** 从 localStorage 读取留言 */
+function loadComments(symbol: string): Comment[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_PREFIX + symbol.toUpperCase());
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** 保存留言到 localStorage */
+function saveComments(symbol: string, comments: Comment[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(STORAGE_KEY_PREFIX + symbol.toUpperCase(), JSON.stringify(comments));
+  } catch {
+    // localStorage 满或不可用
+  }
+}
+
 export default function CommentSection({ symbol }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = useCallback(() => {
     setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/comments?symbol=${symbol}&page=1&limit=50`);
-      const data = await res.json();
-      setComments(data.comments || []);
-      setTotal(data.total || 0);
-    } catch {
-      setError('获取留言失败');
-    } finally {
-      setLoading(false);
-    }
+    const data = loadComments(symbol);
+    setComments(data);
+    setLoading(false);
   }, [symbol]);
 
   useEffect(() => {
@@ -35,41 +47,30 @@ export default function CommentSection({ symbol }: CommentSectionProps) {
   }, [fetchComments]);
 
   async function handleSubmit(authorName: string, content: string) {
-    try {
-      const res = await fetch('/api/comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          symbol,
-          authorName: authorName || undefined,
-          content,
-        }),
-      });
-      const data = await res.json();
-      if (data.comment) {
-        setComments(prev => [data.comment, ...prev]);
-        setTotal(prev => prev + 1);
-      }
-    } catch {
-      alert('发表留言失败，请稍后重试');
-    }
+    const newComment: Comment = {
+      id: Date.now(),
+      symbol: symbol.toUpperCase(),
+      authorName: authorName || '匿名用户',
+      content,
+      createdAt: new Date().toISOString(),
+    };
+
+    const updated = [newComment, ...comments];
+    setComments(updated);
+    saveComments(symbol, updated);
   }
 
   async function handleDelete(id: number) {
     if (!confirm('确定要删除这条留言吗？')) return;
-    try {
-      await fetch(`/api/comments/${id}`, { method: 'DELETE' });
-      setComments(prev => prev.filter(c => c.id !== id));
-      setTotal(prev => prev - 1);
-    } catch {
-      alert('删除失败，请稍后重试');
-    }
+    const updated = comments.filter(c => c.id !== id);
+    setComments(updated);
+    saveComments(symbol, updated);
   }
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
       <h3 className="mb-4 text-base font-semibold text-gray-700">
-        💬 留言讨论 ({total})
+        💬 留言讨论 ({comments.length})
       </h3>
 
       {/* 发表留言 */}
@@ -83,10 +84,6 @@ export default function CommentSection({ symbol }: CommentSectionProps) {
           {[1, 2, 3].map(i => (
             <div key={i} className="h-20 rounded-lg bg-gray-100" />
           ))}
-        </div>
-      ) : error ? (
-        <div className="text-center py-6">
-          <p className="text-sm text-gray-500">{error}</p>
         </div>
       ) : comments.length === 0 ? (
         <div className="text-center py-8">
@@ -106,12 +103,7 @@ export default function CommentSection({ symbol }: CommentSectionProps) {
                     {comment.authorName || '匿名用户'}
                   </span>
                   <span className="text-xs text-gray-400">
-                    {new Date(comment.createdAt).toLocaleString('zh-CN', {
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
+                    {formatTime(comment.createdAt)}
                   </span>
                 </div>
                 <button
@@ -131,4 +123,17 @@ export default function CommentSection({ symbol }: CommentSectionProps) {
       )}
     </div>
   );
+}
+
+function formatTime(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleString('zh-CN', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return dateStr;
+  }
 }
